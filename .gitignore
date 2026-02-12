@@ -1,0 +1,9 @@
+# Sensitive/local environment files
+.env
+.env.*
+.env.local
+*.secret
+
+# Generated files during install (optional but good)
+setup-chroot.sh
+tmp.sh
