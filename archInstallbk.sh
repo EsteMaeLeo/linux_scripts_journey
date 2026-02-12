@@ -89,16 +89,42 @@ pacstrap -K /mnt base linux linux-firmware btrfs-progs sudo vim nano micro grub 
 # Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# ---- FIX 1: Create the chroot script FIRST ----
+# ==================== CONFIG ====================
+# Use environment variables if set, otherwise safe defaults
+#: "${INST_HOSTNAME:=myarch}"           # safe fallback
+#: "${INST_LOCALE:=en_US.UTF-8}"
+#: "${INST_TIMEZONE:=UTC}"              # neutral default
+#: "${INST_USERNAME:=user}"             # generic fallback
+# ===============================================
+# Ensure efivarfs is mounted for UEFI boot entry registration
+echo -e "${YELLOW}Mounting efivarfs for UEFI support...${NC}"
+mount -t efivarfs efivarfs /mnt/sys/firmware/efi/efivars 2>/dev/null || true
+
+# Quick check (optional but helpful)
+if mount | grep -q "efivarfs on /mnt/sys/firmware/efi/efivars"; then
+    echo -e "${GREEN}efivarfs mounted successfully${NC}"
+else
+    echo -e "${YELLOW}Warning: efivarfs mount may have failed — GRUB will try fallback${NC}"
+fi
+
+# Now proceed to chroot
+echo -e "${YELLOW}Entering chroot...${NC}"
+arch-chroot /mnt /setup-chroot.sh
+
+# Copy chroot script into place
 cat > /mnt/setup-chroot.sh << 'EOF'
 #!/usr/bin/env bash
+# Chroot phase - runs automatically
+
 set -euo pipefail
 
+# ==================== CONFIG FROM LIVE PHASE ====================
 HOSTNAME="${INST_HOSTNAME}"
 LOCALE="${INST_LOCALE}"
 TIMEZONE="${INST_TIMEZONE}"
 USERNAME="${INST_USERNAME}"
-DISK="${INST_DISK}"
+DISK="$INST_DISK"
+# ============================================================
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -106,15 +132,18 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 cd /root
+
 echo -e "${YELLOW}Chroot phase - setting timezone, locale, hostname...${NC}"
 
 hwclock --systohc
 timedatectl set-timezone "$TIMEZONE"
 
+# Locale
 sed -i "/^#.*$LOCALE/s/^#//" /etc/locale.gen
 locale-gen
 echo "LANG=$LOCALE" > /etc/locale.conf
 
+# Hostname
 echo "$HOSTNAME" > /etc/hostname
 cat << EOH > /etc/hosts
 127.0.0.1   localhost
@@ -122,18 +151,20 @@ cat << EOH > /etc/hosts
 127.0.1.1   $HOSTNAME.localdomain $HOSTNAME
 EOH
 
+# Root password
 echo -e "${YELLOW}Set root password${NC}"
 passwd
+
+# Create user
 useradd -m -s /bin/bash "$USERNAME"
 echo -e "${YELLOW}Set password for $USERNAME${NC}"
 passwd "$USERNAME"
 usermod -aG wheel,audio,video,optical,storage,input "$USERNAME"
 
+# Sudoers
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-# Add passwordless sudo for the new user (required for makepkg in non-interactive su)
-echo "$USERNAME ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/00-$USERNAME
-chmod 440 /etc/sudoers.d/00-$USERNAME
 
+# ZRAM
 cat > /etc/systemd/zram-generator.conf << EOC
 [zram0]
 zram-size = ram / 2
@@ -141,46 +172,39 @@ compression-algorithm = zstd
 swap-priority = 100
 EOC
 
+# Bootloader (GRUB EFI)
 mkdir -p /boot/efi
-mount "${DISK}1" /boot/efi || true
-echo -e "${YELLOW}Ensuring efivarfs is mounted for GRUB...${NC}"
-mount -t efivarfs efivarfs /sys/firmware/efi/efivars 2>/dev/null || true
-
-echo -e "${YELLOW}Installing GRUB...${NC}"
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB || {
-    echo -e "${YELLOW}Normal install failed — retrying with --no-nvram${NC}"
-    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --no-nvram
-}
+mount "${DISK}1" /boot/efi   # DISK is not defined here - hardcoded for safety
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
-systemctl enable sshd NetworkManager
+# SSH
+systemctl enable sshd
 
+# Network
+systemctl enable NetworkManager
+
+# Optional: SDDM if you want graphical login
+# systemctl enable sddm
+
+# AUR helper (yay)
 su - "$USERNAME" -c "cd ~ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm"
 
 echo -e "${GREEN}Chroot phase complete!${NC}"
 echo "You can now exit, umount -R /mnt && reboot"
-sudo rm /etc/sudoers.d/00-$USERNAME
+
+# Optional: pause so you can review
+# read -p "Press Enter to exit chroot script..."
 EOF
 
 chmod +x /mnt/setup-chroot.sh
-# ---- END OF FIX 1 ----
 
-# ---- FIX 2: Mount efivarfs (ignore warning, it's normal on some systems) ----
-echo -e "${YELLOW}Mounting efivarfs for UEFI support...${NC}"
-mount -t efivarfs efivarfs /mnt/sys/firmware/efi/efivars 2>/dev/null || true
-if mount | grep -q efivarfs; then
-    echo -e "${GREEN}efivarfs mounted${NC}"
-else
-    echo -e "${YELLOW}efivarfs not mounted — GRUB will use --no-nvram fallback (still works!)${NC}"
-fi
-
-# ---- FIX 3: Run chroot ONLY ONCE (correct way) ----
-echo -e "${YELLOW}Entering chroot and running setup...${NC}"
+# Chroot and run the second script
+echo -e "${YELLOW}Entering chroot...${NC}"
 arch-chroot /mnt /setup-chroot.sh
 
 echo -e "${GREEN}Installation finished!${NC}"
-echo "Now run: exit, umount -R /mnt, sync, reboot"
-echo "After reboot, login as $INST_USERNAME (or root) via SSH or console"
-echo "You can now delete the script and .env file from the USB"
+echo "Now: umount -R /mnt && reboot"
+echo "After reboot, login as $USERNAME or root"
 
 exit 0
