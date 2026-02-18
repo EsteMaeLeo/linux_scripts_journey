@@ -1,0 +1,17 @@
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/HeavyData.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Gohu.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hermit.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/CodeNewRoman.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/CascadiaMono.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/AnonymousPro.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/AtkinsonHyperlegibleMono.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hermit.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/IBMPlexMono.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/NerdFontsSymbolsOnly.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/OpenDyslexic.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/RobotoMono.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/UbuntuMono.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/ProggyClean.zip
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FantasqueSansMono.zip
