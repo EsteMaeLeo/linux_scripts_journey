@@ -1,0 +1,159 @@
+command_timeout = 1000
+right_format = """$time"""
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"Code" = "👨‍💻 Code"
+"Cursos" = "  Cursos"
+"config" = " "
+
+[time]
+disabled = false
+style = "#939594"
+format = "[$time]($style)"
+
+[aws]
+style = "bg:#9ECFD4 fg:black"
+symbol = "☁ "
+format = "[](fg:black bg:#9ECFD4)[$symbol$profile]($style)[](fg:#9ECFD4 bg:black)"
+
+[character]
+success_symbol = "[❯](#3BC1A8)"
+error_symbol = "[✗](#ff4b00)"
+
+[cmd_duration]
+style = "#9ECFD4"
+min_time = 1
+format = "[](fg:black bg:#9ECFD4)[󱑍 󰥔 $duration](bg:$style fg:black)[](fg:$style)"
+
+[directory]
+style = "#016B61"
+truncate_to_repo = false
+fish_style_pwd_dir_length = 1
+format = "[](fg:black bg:#016B61)[$path[$read_only](bg:$style fg:black)](bg:$style fg:black)[](fg:$style)"
+read_only = "  "
+
+[docker_context]
+style = "fg:black bg:#70B2B2"
+symbol = "🐳  "
+format = "[](fg:black bg:#70B2B2)[$symbol$context]($style)[](fg:#70B2B2)"
+
+[git_branch]
+style = "#70B2B2"
+format = "[](fg:black bg:$style)[ $symbol$branch](fg:black bg:$style)[](fg:$style)"
+
+[git_commit]
+style = "#70B2B2"
+format = "\b[ ](bg:$style)[\\($hash$tag\\)](fg:black bg:$style)[](fg:$style)"
+
+[git_state]
+style = "#70B2B2"
+format = "\b[ ](bg:$style)[ \\($state( $progress_current/$progress_total)\\)](fg:black bg:$style)[](fg:$style)"
+
+[git_status]
+style = "#70B2B2"
+format = "(\b[ ](bg:$style fg:black)$conflicted$staged$modified$renamed$deleted$untracked$stashed$ahead_behind[](fg:$style))"
+conflicted = "[ ](bold fg:88 bg:#70B2B2)[  ${count} ](fg:black bg:#70B2B2)"
+staged = "[ $count ](fg:black bg:#70B2B2)"
+modified = "[ ${count} ](fg:black bg:#70B2B2)"
+renamed = "[ ${count} ](fg:black bg:#70B2B2)"
+deleted = "[ ${count} ](fg:black bg:#70B2B2)"
+untracked = "[?${count} ](fg:black bg:#70B2B2)"
+stashed = "[ ${count} ](fg:black bg:#70B2B2)"
+ahead = "[ ${count} ](fg:#523333 bg:#70B2B2)"
+behind = "[ ${count} ](fg:black bg:#70B2B2)"
+diverged = "[ ](fg:88 bg:#70B2B2)[ נּ ](fg:black bg:#70B2B2)[ ${ahead_count} ](fg:black bg:#70B2B2)[ ${behind_count} ](fg:black bg:#70B2B2)"
+
+[golang]
+symbol = "🚀 "
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[helm]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol($version)]($style)[](fg:#70B2B2)"
+
+[java]
+symbol = " "
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[kotlin]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[kubernetes]
+format = "[](fg:black bg:#09637E)[$symbol$context](fg:black bg:#09637E)[](fg:#09637E)"
+disabled = false
+
+[memory_usage]
+style = "#9ECFD4"
+symbol = "  🚀"
+format = "[](fg:black bg:#9ECFD4)[$symbol$ram](bg:#9ECFD4 fg:black)[](fg:#9ECFD4)"
+threshold = 1
+disabled = false
+
+[nodejs]
+style = "green"
+format = "[](fg:black bg:#70B2B2)[$symbol($version)](fg:black bg:#70B2B2)[](fg:#70B2B2)"
+
+[ocaml]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[package]
+disabled = true
+
+[php]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[python]
+symbol = "🐍 "
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$pyenv_prefix$version$virtualenv]($style)[](fg:#70B2B2)"
+
+[ruby]
+symbol = " "
+format = "[](fg:black bg:#70B2B2)[$symbol$version](fg:black bg:#70B2B2)(fg:black bg:#70B2B2)[](fg:#70B2B2)"
+
+[rust]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[scala]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[swift]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
+
+[shell]
+fish_indicator = ""
+bash_indicator = "bash "
+zsh_indicator = "zsh "
+powershell_indicator = ""
+format = "[$indicator](fg:#09637E)"
+disabled = false
+[shlvl]
+symbol = " "
+style = "fg:black bg:#09637E"
+format = "[](fg:black bg:#09637E)[$symbol$shlvl]($style)[](fg:#09637E)"
+disabled = false
+
+[terraform]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$workspace]($style)[](fg:#70B2B2)"
+
+[username]
+style_user = "#0370C0"
+style_root = "#C00311"
+format = "[](fg:black bg:$style)[$user](fg:black bg:$style)[](fg:$style)"
+
+[vagrant]
+style = "fg:black bg:#70B2B2"
+format = "[](fg:black bg:#70B2B2)[$symbol$version]($style)[](fg:#70B2B2)"
